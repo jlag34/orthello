@@ -30,7 +30,7 @@
     PLAYER_NONE = 0,
     MAX_ROWS = 8,
     MAX_COLS = 8;
-    red = 0,
+  red = 0,
     blue = 0;
 
   var Util = {
@@ -90,8 +90,8 @@
         }
         this.board.push(t_row);
       }
-      
-      
+
+
       //setup click handlers
       $('.cell').on('click', this.cellClicked.bind(this));
 
@@ -102,7 +102,7 @@
     },
     drawBoard: function () {
       var t_row, t_col, r, c, cellId;
-      
+
       currPlayer = this.currentPlayer === PLAYER_RED ? 'red' : 'blue';
 
       //draw all pieces on the board
@@ -120,19 +120,19 @@
         .removeClass('blue').removeClass('red')
         .addClass(currPlayer)
         .text(currPlayer.toUpperCase() + " TURN");
-      
+
       //Print score
-      $('.redPoints').addClass('red').text(red);  
+      $('.redPoints').addClass('red').text(red);
       $('.bluePoints').addClass('blue').text(blue);
-      
+
       //Reset scores back to 0 after printed
       red = 0; blue = 0;
-        
+
       return this;
     },
     cellClicked: function (e) {
       var cellId = e.currentTarget.id,
-        coords = Util.rowAndColForCellId(cellId);
+          coords = Util.rowAndColForCellId(cellId);
 
       this.doTurn(coords[0], coords[1]);
     },
@@ -146,13 +146,16 @@
 
       //Position to left
       for (var i = column - 1; i >= 0; i--) {
-        if (this.board[row][i] === 0) {
+        if (this.board[row][i] === 0 || (this.board[row][i] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[row][i] === enemy) {
           flip.push(i);
         }
-        if (this.board[row][i] === enemy * -1) {
+        if (this.board[row][i] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             gameBoard[row][spot] *= -1
           });
@@ -161,34 +164,41 @@
 
       //Position to right
       for (var i = column + 1; i < 8; i++) {
-        if (this.board[row][i] === 0) {
+        if (this.board[row][i] === 0 || (this.board[row][i] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[row][i] === enemy) {
           flip.push(i);
         }
-        if (this.board[row][i] === enemy * -1) {
+        if (this.board[row][i] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             gameBoard[row][spot] *= -1
           });
         }
       }
+      check +=1;
     },
 
     checkCol: function (row, column) {
       var flip = [];
       var enemy = this.currentPlayer * -1;
       var gameBoard = this.board;
-      
+
       //Positon to up
       for (var i = row - 1; i >= 0; i--) {
-        if (this.board[i][column] === 0) {
+        if (this.board[i][column] === 0 || (this.board[i][column] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[i][column] === enemy) {
           flip.push(i);
         }
-        if (this.board[i][column] === enemy * -1) {
+        if (this.board[i][column] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             gameBoard[spot][column] *= -1
           });
@@ -197,38 +207,45 @@
 
       //Position to down
       for (var i = row + 1; i < 8; i++) {
-        if (this.board[i][column] === 0) {
+        if (this.board[i][column] === 0 || (this.board[i][column] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[i][column] === enemy) {
           flip.push(i);
         }
-        if (this.board[i][column] === enemy * -1) {
+        if (this.board[i][column] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             gameBoard[spot][column] *= -1
           });
         }
       }
+      check +=1;
     },
-    
+
     checkMajorDiagonal: function (row, column) {
       var flip = [];
       var enemy = this.currentPlayer * -1;
       var gameBoard = this.board;
-      
+
       //Position to up/left
-      var j = column-1;
-      for (var i = row-1; i >= 0; i--) {
+      var j = column - 1;
+      for (var i = row - 1; i >= 0; i--) {
         if (j < 0) {
           break;
         }
-        if (this.board[i][j] === 0) {
+        if (this.board[i][j] === 0 || (this.board[i][j] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[i][j] === enemy) {
           flip.push('' + [i] + [j]);
         }
-        if (this.board[i][j] === enemy * -1) {
+        if (this.board[i][j] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             var temp = spot.split('');
             gameBoard[temp[0]][temp[1]] *= -1
@@ -236,20 +253,23 @@
         }
         j--;
       }
-      
+
       //Position to down/right
-      j = column+1;
-      for (var i = row+1; i < 8; i++) {
+      j = column + 1;
+      for (var i = row + 1; i < 8; i++) {
         if (j >= 8) {
           break;
         }
-        if (this.board[i][j] === 0) {
+        if (this.board[i][j] === 0 || (this.board[i][j] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[i][j] === enemy) {
           flip.push('' + [i] + [j]);
         }
-        if (this.board[i][j] === enemy * -1) {
+        if (this.board[i][j] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             var temp = spot.split('');
             gameBoard[temp[0]][temp[1]] *= -1
@@ -257,29 +277,30 @@
         }
         j++;
       }
-      
-      
-      
+      check +=1;
     },
-    
+
     checkMinorDiaginal: function (row, column) {
       var flip = [];
       var enemy = this.currentPlayer * -1;
       var gameBoard = this.board;
-      
+
       //Position to up/right
-      var j = column+1;
-      for (var i = row-1; i >= 0; i--) {
+      var j = column + 1;
+      for (var i = row - 1; i >= 0; i--) {
         if (j > 8) {
           break;
         }
-        if (this.board[i][j] === 0) {
+        if (this.board[i][j] === 0 || (this.board[i][j] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[i][j] === enemy) {
           flip.push('' + [i] + [j]);
         }
-        if (this.board[i][j] === enemy * -1) {
+        if (this.board[i][j] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             var temp = spot.split('');
             gameBoard[temp[0]][temp[1]] *= -1
@@ -287,20 +308,23 @@
         }
         j++;
       }
-      
+
       //Position to down/left
-      j = column-1;
-      for (var i = row+1; i < 8; i++) {
-        if (j >= 0) {
+      j = column - 1;
+      for (var i = row + 1; i < 8; i++) {
+        if (j <= 0) {
           break;
         }
-        if (this.board[i][j] === 0) {
+        if (this.board[i][j] === 0 || (this.board[i][j] === enemy * -1 && flip.length === 0)) {
           break;
         }
         if (this.board[i][j] === enemy) {
           flip.push('' + [i] + [j]);
         }
-        if (this.board[i][j] === enemy * -1) {
+        if (this.board[i][j] === enemy * -1 && flip.length > 0) {
+          this.board[row][column] = this.currentPlayer;
+          // this.currentPlayer = enemy;
+          check +=2;
           return flip.map(function (spot) {
             var temp = spot.split('');
             gameBoard[temp[0]][temp[1]] *= -1
@@ -308,25 +332,22 @@
         }
         j--;
       }
-      
+      check +=1;
     },
-
-
-
-
 
     doTurn: function (row, column) {
       //Implement the correct rules
+      check = 0;
       if (this.board[row][column] === 0) {
         this.checkRow(row, column);
         this.checkCol(row, column);
         this.checkMajorDiagonal(row, column);
         this.checkMinorDiaginal(row, column);
-        this.board[row][column] = this.currentPlayer;
-        this.currentPlayer *= -1;
+        if (check > 4) {
+          this.currentPlayer *= -1;
+        }
         this.drawBoard();
       }
-
     }
 
 
