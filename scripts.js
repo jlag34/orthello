@@ -30,6 +30,8 @@
     PLAYER_NONE = 0,
     MAX_ROWS = 8,
     MAX_COLS = 8;
+    red = 0,
+    blue = 0;
 
   var Util = {
     cellIdForRowAndCol: function (r, c) {
@@ -43,8 +45,10 @@
     },
     cellContentsForPlayer: function (player) {
       if (player === PLAYER_RED) {
+        red += 1;
         return '<div class="piece red"></div>';
       } else if (player === PLAYER_BLUE) {
+        blue += 1;
         return '<div class="piece blue"></div>';
       }
       return '';
@@ -86,7 +90,8 @@
         }
         this.board.push(t_row);
       }
-
+      
+      
       //setup click handlers
       $('.cell').on('click', this.cellClicked.bind(this));
 
@@ -96,8 +101,9 @@
       return this;
     },
     drawBoard: function () {
-      var t_row, t_col, r, c, cellId,
-        currPlayer = this.currentPlayer === PLAYER_RED ? 'red' : 'blue';
+      var t_row, t_col, r, c, cellId;
+      
+      currPlayer = this.currentPlayer === PLAYER_RED ? 'red' : 'blue';
 
       //draw all pieces on the board
       for (r = 0; r < MAX_ROWS; r += 1) {
@@ -113,7 +119,15 @@
       $('#currentPlayer')
         .removeClass('blue').removeClass('red')
         .addClass(currPlayer)
-        .text(currPlayer.toUpperCase());
+        .text(currPlayer.toUpperCase() + " TURN");
+      
+      //Print score
+      $('.redPoints').addClass('red').text(red);  
+      $('.bluePoints').addClass('blue').text(blue);
+      
+      //Reset scores back to 0 after printed
+      red = 0; blue = 0;
+        
       return this;
     },
     cellClicked: function (e) {

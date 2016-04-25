@@ -35,3 +35,26 @@
 #currentPlayer.blue {
     color: blue;
 }
+.blue {
+  color: blue;
+}
+.red {
+  color: red;
+}
+.statusWrapper {
+  float: left;
+  width: 200px;
+}
+.board {
+  width: 450px;
+  float: left;
+}
+
+.player {
+  margin-top: 120px;
+  font-size: x-large;
+}
+
+.text-align {
+  text-align: center;
+}

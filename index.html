@@ -87,12 +87,29 @@
       <div class="cell" id="r7_c7"></div>
     </div>
   </div>
-  <br/>
-  <div id="status">Current Player: <span id="currentPlayer"></span></div>
-  
- 
-  <script src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
-   <script src='./scripts.js'></script>
+
+  <div class="statusWrapper">
+    <div class="scores">
+      <div class="redScore text-align">
+        <h3 class="red">Red Score</h3>
+        <span class="redPoints"></span>
+      </div>
+      <div class="blueScore text-align">
+        <h3 class="blue">Blue Score</h3>
+        <span class="bluePoints"></span>
+      </div>
+    </div>
+    <div class="player text-align">
+      <span id="currentPlayer"></span>
+    </div>
+  </div>
+
+  <!--<div class="turn"><h3>Current Player:</h3> <span id="currentPlayer"></span></div>-->
+
+
+  <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="
+    crossorigin="anonymous"></script>
+  <script src='./scripts.js'></script>
 </body>
 
 </html>
