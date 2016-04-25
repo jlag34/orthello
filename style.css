@@ -1,0 +1,37 @@
+.row:after {
+    content:"";
+    display: table;
+    clear: both;
+}
+.cell {
+    border: 1px solid black;
+    border-right: 0;
+    border-bottom: 0;
+    float: left;
+    height: 50px;
+    width: 50px;
+}
+.cell:nth-of-type(8) {
+    border-right: 1px solid black;
+}
+.row:nth-of-type(8) .cell {
+    border-bottom: 1px solid black;
+}
+.piece {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    margin: 5px;
+}
+.piece.blue {
+    background-color: blue;
+}
+.piece.red {
+    background-color: red;
+}
+#currentPlayer.red {
+    color: red;
+}
+#currentPlayer.blue {
+    color: blue;
+}
