@@ -30,7 +30,9 @@
     PLAYER_NONE = 0,
     MAX_ROWS = 8,
     MAX_COLS = 8,
-    numDirections = 8;
+    numDirections = 8,
+    red = 0,
+    blue = 0;
 
   var Util = {
     cellIdForRowAndCol: function (r, c) {
@@ -44,8 +46,10 @@
     },
     cellContentsForPlayer: function (player) {
       if (player === PLAYER_RED) {
+        red += 1;
         return '<div class="piece red"></div>';
       } else if (player === PLAYER_BLUE) {
+        blue += 1;
         return '<div class="piece blue"></div>';
       }
       return '';
@@ -115,6 +119,15 @@
         .removeClass('blue').removeClass('red')
         .addClass(currPlayer)
         .text(currPlayer.toUpperCase());
+
+      //Print score
+      $('.redPoints').addClass('red').text(red);
+      $('.bluePoints').addClass('blue').text(blue);
+
+      //Reset scores back to 0 after printed
+      red = 0; blue = 0;
+
+
       return this;
     },
     cellClicked: function (e) {
@@ -130,20 +143,29 @@
       var listAdd = [];
       var stop = false;
       while (!stop) {
+        
+        //make sure that row doesn't go out of bounds
+        if(row+dir[0] > 7 || row+dir[0] < 0) {
+          console.log('in here')
+          return;
+        }
+        
+        
         if (this.board[row + dir[0]][column + dir[1]] === this.currentPlayer * -1) {
-          listAdd.push([[row += dir[0]][column += dir[1]]])
+          listAdd.push([row += dir[0], column += dir[1]])
         } else if (this.board[row += dir[0]][column += dir[1]] === this.currentPlayer) {
           stop = true;
           return listAdd;
         } else {
           return;
         }
-        
+
       }
     },
 
     doTurn: function (row, column) {
       //Implement the correct rules
+      //All directions 
       var directions = {
         'UP': [0, 1],
         'UP_RIGHT': [1, 1],
@@ -154,25 +176,33 @@
         'LEFT': [-1, 0],
         'UP_LEFT': [-1, 1]
       };
-      var flips = [];
+      
+      //flips = array of all pieces needed to be flipped
+      //newFlip = flips being added to total
+      var flips = [], newFlip;
 
+      //for each direction, pass to axialCount
       for (var key in directions) {
-        var newFlip = this.axialCount(directions[key], row, column);
+        newFlip = this.axialCount(directions[key], row, column);
+        
+        //if array and has length add to total flips
         if (Array.isArray(newFlip) && newFlip.length > 0) {
           flips = flips.concat(newFlip);
         }
       }
-      
-      for (var i = 0; i < flips.length; i++) {
-        console.log(flips, 'thisss');
-        console.log(this.board[flips[i]], 'this');
-        this.board[flips[i]] === this.currentPlayer;
+      //If/else prevents again bad piece placement
+      if (flips.length > 0) {
+        for (var i = 0; i < flips.length; i++) {
+          this.board[flips[i][0]][flips[i][1]] = this.currentPlayer;
+        }
+        if (!this.board[row][column]) {
+          this.board[row][column] = this.currentPlayer;
+          this.currentPlayer *= -1;
+          this.drawBoard();
+        } else {
+          return;
+        }
       }
-
-
-      this.board[row][column] = this.currentPlayer;
-      this.currentPlayer *= -1;
-      this.drawBoard();
     }
 
     /*******************************************************/
